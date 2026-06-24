@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.zip
+*.ogg
+*.mp3
+*.wav
+*.flac
+*.jpg
+*.jpeg
+*.png
+arcaea_out/
+*_out/

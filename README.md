@@ -17,6 +17,14 @@ and post-generation audit metrics.
 
 ## Usage
 
+## Download
+
+Download the packaged skill from the latest release:
+
+https://github.com/infinitytom/arcaea-chartcraft-skill/releases/download/v0.1.0/arcaea-chartcraft-skill.skill
+
+The `.skill` file is a zip-compatible package containing this skill directory.
+
 Single difficulty:
 
 ```bash

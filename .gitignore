@@ -8,5 +8,7 @@ __pycache__/
 *.jpg
 *.jpeg
 *.png
+!assets/
+!assets/alipay-reward.jpg
 arcaea_out/
 *_out/

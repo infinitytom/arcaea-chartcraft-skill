@@ -15,8 +15,6 @@ The skill emphasizes BPM verification, melody-aware arcs, genre-specific chart
 language, multi-difficulty design, real scoring objects, wider motion options,
 and post-generation audit metrics.
 
-## Usage
-
 ## Download
 
 Download the packaged skill from the latest release:
@@ -24,6 +22,12 @@ Download the packaged skill from the latest release:
 https://github.com/infinitytom/arcaea-chartcraft-skill/releases/download/v0.1.0/arcaea-chartcraft-skill.skill
 
 The `.skill` file is a zip-compatible package containing this skill directory.
+
+## 打赏主播
+
+![打赏主播](assets/alipay-reward.jpg)
+
+## Usage
 
 Single difficulty:
 

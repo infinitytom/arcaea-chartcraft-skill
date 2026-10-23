@@ -42,6 +42,7 @@ def main():
                     help="hand-travel intensity and groove accent strength")
     ap.add_argument("--no-melody", action="store_true", help="drum-only fallback (skip HPSS/pyin)")
     args = ap.parse_args()
+    log("Legacy sketch generator: outputs require phrase authoring, contact review and playtesting; motion/rating presets are not quality validation.")
 
     import librosa
     import soundfile as sf

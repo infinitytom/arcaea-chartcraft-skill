@@ -48,7 +48,8 @@ arc(0,522,0.00,1.00,si,1.00,1.00,0,none,true)[arctap(0),arctap(261)];
   (e.g. `-0.25`, `1.25`) for off-field swings.
 - `easing` — see below.
 - `y1,y2` — height on the sky plane. `0.0`=bottom (near the lanes), `1.0`=top.
-- `color` — `0` blue, `1` red, `2` green (rare). **Color = which hand.**
+- `color` — `0` blue, `1` red, `2` green (rare). Color supplies an intended-hand
+  hypothesis; it does not permanently restrict the Arc or free hand to one half.
 - `fx` — effect name or `none`.
 - `isTrace` — `true` = a **trace/skyline guide that scores nothing** (purely
   visual; only arctaps placed on it score). `false` = a **playable arc** the
@@ -58,36 +59,47 @@ arc(0,522,0.00,1.00,si,1.00,1.00,0,none,true)[arctap(0),arctap(261)];
   **trace arcs** (`isTrace=true`) that act as their rail. Each arctap = 1 combo.
 
 ### Easing codes
-Two characters: **first = x-axis easing, second = y-axis easing.**
-`s`=linear, `b`=bezier, `si`=sine-in, `so`=sine-out(cosine).
-Examples: `s` (linear x, linear y), `si`/`so` (eased x, linear y),
-`sisi` (sine-in both), `siso`, `sosi`, `soso`. Shorthand: when the y-axis easing
-is `s` it may be omitted (`sis` ≡ `si` on x with linear y; bare `s` ≡ linear/linear).
+For normalized progress `t`, ArcCreate uses `I(t)=sin(pi*t/2)` and
+`O(t)=1-cos(pi*t/2)`. The supported mapping in the bundled evaluator is:
+
+| Curve | x interpolation | y interpolation |
+|---|---|---|
+| `s` | linear | linear |
+| `b` | `t*t*(3-2*t)` | `t*t*(3-2*t)` |
+| `si` / `so` | I / O | linear |
+| `sisi` / `siso` | I | I / O |
+| `sosi` / `soso` | O | I / O |
+
+Test non-symmetric positions such as `t=.25`, not only midpoints. Arctap positions
+must be evaluated on their parent curve; endpoint averaging is insufficient.
 
 ## Scoring (confirm charts satisfy this)
 - **Max score = 10,000,000 + total_combo** (all shiny/max PURE).
 - Per PURE = `10,000,000 / total_combo`; FAR = half; LOST = 0; each shiny PURE +1.
 - The engine normalizes, so **any valid chart satisfies the rule** — there is no
   authored number that must "sum to 10M".
-- **total_combo / Notes** counts: tap=1, arctap=1, hold = 1 + tick-combo by
-  duration, playable arc (`isTrace=false`) = 1 + tick-combo by length, **trace
-  (`isTrace=true`) = 0**. Hold/arc ticks scale with `TimingPointDensityFactor`
-  and are computed by the engine — the exact in-game Notes count is only known
-  after loading in a simulator (ArcCreate / Arcade).
+- **total_combo / Notes** counts: taps and arctaps are discrete hits; holds and
+  playable Arcs generate engine-dependent ticks, with connection/head rules also
+  relevant. Traces without arctaps provide no judgement hits. Do not label Arc
+  segment totals or new-gesture totals as the exact in-game combo count; verify
+  that count in the intended engine.
 
 ## Validation checklist
 - All `lane` ∈ {1,2,3,4}; `hold`/`arc` have `end > start` (`arc` may have
   `end == start` for a point).
 - Every `arctap(t)` satisfies `arc_start ≤ t ≤ arc_end` of its parent.
 - No duplicate identical note lines; no two taps at the same `(t, lane)`.
-- A **connected** playable-arc chain keeps **one color**; different colors only
-  for arcs that overlap in time (two-hand patterns). See SKILL.md principle 4.
-- Plenty of real scoring objects (not just traces). See principle 6.
-- No unexplained multi-second empty gaps unless the audio is silent there.
+- For conservative same-hand chain counting, join only same-color segments in
+  one timinggroup with exact endpoints and at most a 1 ms timing seam. A visible
+  cross-color connection alone does not establish a one-hand switch. Different
+  colors can also appear sequentially with a deliberate release or handoff.
+- Count real scoring objects and continuous gesture starts separately.
+- Explain extended gaps using the selected musical layer, contrast or recovery;
+  audio need not be completely silent for an intentional rest.
 
 ## Package layout (what Arcaea needs)
 `2.aff` (this difficulty's chart; the integer name maps to `ratingClass`:
-`0.aff` Past, `1.aff` Present, `2.aff` Future, `3.aff` Beyond), `songlist.json`
+`0.aff` Past, `1.aff` Present, `2.aff` Future, `3.aff` Beyond, `4.aff` Eternal), `songlist.json`
 (or a `songlist` entry), `base.jpg` + `base_256.jpg` (512²/256² jacket),
 `base.ogg` (Vorbis audio). Zip them together.
 

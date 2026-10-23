@@ -12,3 +12,5 @@ __pycache__/
 !assets/alipay-reward.jpg
 arcaea_out/
 *_out/
+.pytest_cache/
+.venv*/
